@@ -103,6 +103,9 @@ implementation. The system is divided into the following:
 - Hardware (aka "View") - interfaces with the hardware based.
 - Controller - handles the interface between the hardware and model, as well as changes to the model.
 
+### Class Diagram
+![class diagram](diagrams/Machine-Swipe-System-Class-Diagram.png)
+
 ### Overview of the Model Tier
 (Not typed yet)
 
