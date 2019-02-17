@@ -85,10 +85,10 @@ All diagrams shown were made in [draw.io](draw.io), and are stored
 in `\docs\diagrams`.
 
 ### Domain Model
-![domain model](diagrams/Machine Swipe System Domain Model.png)
+![domain model](diagrams/Machine-Swipe-System-Domain-Model.png)
 
 ### System States
-![state diagram](diagrams/Machine Swipe System State Diagram.png)
+![state diagram](diagrams/Machine-Swipe-System-State-Diagram.png)
 
 ### Design Patterns
 The design patterns used, defined by the "Gang of Four", include:
