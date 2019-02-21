@@ -12,9 +12,9 @@ from Model import Session
 
 
 """
-Test the User class.
+Test the Session class.
 """
-class TestUserClass(unittest.TestCase):
+class TestSessionClass(unittest.TestCase):
 	"""
 	Sets up the unit test.
 	"""
@@ -53,7 +53,7 @@ class TestUserClass(unittest.TestCase):
 """
 Test the static methods.
 """
-class TestStringMethods(unittest.TestCase):
+class TestStaticMethods(unittest.TestCase):
 	"""
 	Sets up the unit test.
 	"""

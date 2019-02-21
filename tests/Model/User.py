@@ -44,7 +44,7 @@ class TestUserClass(unittest.TestCase):
 """
 Test the static methods.
 """
-class TestStringMethods(unittest.TestCase):
+class TestStaticMethods(unittest.TestCase):
 	"""
 	Test the getHashFromId method.
 	"""

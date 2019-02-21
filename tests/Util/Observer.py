@@ -13,7 +13,7 @@ from Util import Observer
 """
 Test observer pattern.
 """
-class TestStringMethods(unittest.TestCase):
+class TestObserverPattern(unittest.TestCase):
 	"""
 	Tests observers are notified.
 	"""
@@ -65,6 +65,8 @@ class TestStringMethods(unittest.TestCase):
 		observable = Observer.Observable()
 		observable.register(observer1)
 		observable.register(observer2)
+		observable.register(observer3)
+		observable.unregister(observer3)
 
 		# Notify the observers with arguments.
 		observable.notify("Test1","Test2","Test3")

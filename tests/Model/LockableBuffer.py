@@ -12,7 +12,7 @@ from Model import LockableBuffer
 """
 Test the LockableBuffer class.
 """
-class TestUserClass(unittest.TestCase):
+class TestLockableBufferClass(unittest.TestCase):
 	"""
 	Tests the constructor.
 	"""

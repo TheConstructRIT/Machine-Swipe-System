@@ -13,7 +13,7 @@ from Util import Time
 """
 Test the static methods.
 """
-class TestStringMethods(unittest.TestCase):
+class TestStaticMethods(unittest.TestCase):
 	"""
 	Test the formatTime method.
 	"""
