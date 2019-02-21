@@ -5,20 +5,21 @@ Unit tests for the StateManager.
 """
 
 import unittest
+import time
 from Controller import StateManager
 from Model import User
 from Util import Observer
 
 
 """
-Test the User class.
+Test the SessionManager class.
 """
 class TestStateManagerClass(unittest.TestCase):
 	"""
 	Sets up the unit test.
 	"""
 	def setUp(self):
-		self.testUser = User.User("TestHash","Test Name",20)
+		self.testUser = User.User("TestHash","Test Name",1)
 
 	"""
 	Tests the constructor.
@@ -52,6 +53,18 @@ class TestStateManagerClass(unittest.TestCase):
 		CuT.setStateByName("Inactive")
 		self.assertEqual(CuT.getState().getName(),"Inactive","Initial state is incorrect.")
 		self.assertEqual(observer.getNotifiedState().getName(),"Inactive","Initial state is incorrect.")
+
+	"""
+	Tests that the correct state is set if the session expires.
+	"""
+	def test_sessionExpires(self):
+		CuT = StateManager.StateManager()
+
+		CuT.setStateByName("Active")
+		CuT.idSwiped(self.testUser)
+		self.assertEqual(CuT.getState().getName(),"Active","State is incorrect.")
+		time.sleep(2)
+		self.assertEqual(CuT.getState().getName(),"Inactive","State is incorrect.")
 
 
 

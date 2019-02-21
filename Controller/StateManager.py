@@ -4,10 +4,10 @@ Zachary Cook
 Manages states in the system.
 """
 
-from Util import Observer
 from Controller.States import Active
 from Controller.States import Inactive
 from Controller.States import Stopped
+from Util import Observer
 
 
 
@@ -47,6 +47,12 @@ class StateManager(Observer.Observable):
 	"""
 	def emergencyStopButtonPressed(self):
 		self.getState().emergencyStopButtonPressed()
+
+	"""
+	Invoked when the emergency stop button is released.
+	"""
+	def emergencyStopReleased(self):
+		self.getState().emergencyStopReleased()
 
 	"""
 	Invoked when a user swipes their id.

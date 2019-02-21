@@ -19,6 +19,13 @@ class Stopped(SystemState.SystemState):
 		return "Stopped"
 
 	"""
+	Invoked when the emergency stop button is released.
+	"""
+	def emergencyStopReleased(self):
+		# TODO: Make inactive
+		pass
+
+	"""
 	Invoked when a user swipes their id.
 	"""
 	def idSwiped(self, User):

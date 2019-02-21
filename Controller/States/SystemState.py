@@ -29,6 +29,12 @@ class SystemState():
 		pass
 
 	"""
+	Invoked when the emergency stop button is released.
+	"""
+	def emergencyStopReleased(self):
+		pass
+
+	"""
 	Invoked when a user swipes their id.
 	"""
 	def idSwiped(self,User):
