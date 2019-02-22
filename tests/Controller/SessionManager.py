@@ -12,7 +12,7 @@ from Util import Observer
 
 
 """
-Test the User class.
+Test the SessionManager class.
 """
 class TestSessionManagerClass(unittest.TestCase):
 	"""

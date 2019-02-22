@@ -5,6 +5,7 @@ Class representing the inactive system state.
 """
 
 from Controller.States import SystemState
+from Controller import SessionManager
 
 
 
@@ -22,12 +23,11 @@ class Inactive(SystemState.SystemState):
 	Invoked when the emergency stop button is pressed.
 	"""
 	def emergencyStopButtonPressed(self):
-		# TODO: Stop system
-		pass
+		self.stateManager.setStateByName("Stopped")
 
 	"""
 	Invoked when a user swipes their id.
 	"""
-	def idSwiped(self, User):
-		# TODO: Start session
-		pass
+	def idSwiped(self,User):
+		self.stateManager.setStateByName("Active")
+		SessionManager.getSessionManager().startSession(User)

@@ -57,9 +57,8 @@ class Active(SystemState.SystemState):
 	Invoked when the emergency stop button is pressed.
 	"""
 	def emergencyStopButtonPressed(self):
-		# TODO: Terminate session
-		# TODO: Stop system
-		pass
+		SessionManager.getSessionManager().endSession()
+		self.stateManager.setStateByName("Stopped")
 
 	"""
 	Invoked when a user swipes their id.
