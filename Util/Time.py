@@ -24,7 +24,7 @@ def formatTime(seconds):
 	# Format the hours, minutes, and seconds.
 	formattedSeconds = str(seconds).zfill(2)
 	formattedMinutes = str(minutes).zfill(2)
-	formattedHours = str(hours)
+	formattedHours = str(hours).zfill(2)
 
 	# Format the time.
 	return formattedHours + ":" + formattedMinutes + ":" + formattedSeconds

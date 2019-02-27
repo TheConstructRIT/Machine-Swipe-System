@@ -1,0 +1,7 @@
+{
+  "InternalName": "TestMachine",
+  "DisplayName": "Test Machine",
+  "DefaultSessionTime": 60,
+  "ServerEndpoint": "localhost",
+  "AlarmActivationTime": 20
+}
