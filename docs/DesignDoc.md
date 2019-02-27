@@ -3,7 +3,9 @@
 ## Team Information
 * Product owner: The Construct @ RIT
 * Team members:
-  * Zachary Cook _(Software Engineer)_
+  * Michael Buffalin
+  * Zachary Cook
+  * Jim Heaney
   
 ## Executive Summary
 
@@ -42,13 +44,13 @@ System States:
 
 | State | Definition |
 |-------|------------|
-| `STOPPED` | The machine is disabled with the E-stop pressed. No sessions can be started. |
-| `INACTIVE` | The machine is disabled with the E-stop not pressed. There is no active session. |
-| `ACTIVE` | The machine is enabled, and has an active user. |
+| `Stopped` | The machine is disabled with the E-stop pressed. No sessions can be started. |
+| `Inactive` | The machine is disabled with the E-stop not pressed. There is no active session. |
+| `Active` | The machine is enabled, and has an active user. |
 
 E-Stop Button:
-- When the E-Stop is pressed, the relay will be disabled. The system will enter a `STOPPED` state.
-- When the E-Stop is released and is in a `STOPPED` state, the system will enable the relay and enter either an `INACTIVE` state.
+- When the E-Stop is pressed, the relay will be disabled. The system will enter a `Stopped` state.
+- When the E-Stop is released and is in a `Stopped` state, the system will enable the relay and enter either an `Inactive` state.
 
 Key Switch:
 - The key will be hooked up to the E-Stop.
@@ -57,14 +59,14 @@ Key Switch:
 
 LCD Screen:
 - The machine name and active state must be displayed.
-- If the system is in an `ACTIVE` state, the current user with the time remaining must be displayed.
+- If the system is in an `Active` state, the current user with the time remaining must be displayed.
 
 Mag-Stripe Reader:
-- When the system is in a `STOPPED` state, swipes must display a message about the state and ignore the request.
+- When the system is in a `Stopped` state, swipes must display a message about the state and ignore the request.
 - Swipes by unregistered users (in main server) should display an error and ignore session requests.
-- When the system is in an `INACTIVE` state, swipes should create new sessions.
-- When the system is in an `ACTIVE` state, swiping with the same id as the session should reset the session time.
-- When the system is in an `ACTIVE` state, swiping with a different id should end the current session and start a new session.
+- When the system is in an `Inactive` state, swipes should create new sessions.
+- When the system is in an `Active` state, swiping with the same id as the session should reset the session time.
+- When the system is in an `Active` state, swiping with a different id should end the current session and start a new session.
 - If the main server is unreachable, an error should be displayed and the fallback session length should be used.
 
 Configuration:
@@ -79,6 +81,10 @@ Other:
 - The system should be maintain on The Construct @ RIT's GitHub account.
 - The system should be written in Python 3.
 - The system must use The Construct @ RIT's database system.
+
+## Hardware Configuration
+This section will be written later. The wiring of the GPIO pins
+still needs to be turned into a diagram.
 
 ## Architecture and Design
 All diagrams shown were made in [draw.io](draw.io), and are stored
@@ -107,22 +113,91 @@ implementation. The system is divided into the following:
 ![class diagram](diagrams/Machine-Swipe-System-Class-Diagram.png)
 
 ### Overview of the Model Tier
-(Not typed yet)
+The Model Tier primarily consists of data classes. This 
+includes the following:
+- `User` - Represents a user of the machine. The hash of the
+university id should always be present, but the name can be
+arbitrary. This case will happen for the server, or any method
+to get the name being accessible.
+- `Session` - Represents a "time-boxed" session of a user of the
+machine. When a session is extended, the session should be overridden
+with a new class instead of extending the time limit or changing the
+start time. This makes the implementation of observing changes to
+the current session easier to implement, and the responsibility of
+the observer to either handle or not handle changes in users.
+- `LockableBuffer` - Used to store a fixed set of objects (characters),
+and can be "locked" to prevent accepting new characters. This is used
+directly by the swipe reader to block new swipes from being accepted
+while a swipe is being processed.
+
+Also includes is the base `HttpRequest` class. The extended classes
+(`GetUserFromHash` and `SessionStarted`) are used to encapsulate
+data storage requests. This is done to abstract the implementation
+for classes that use the requests, as well as allow them to be
+replaced for testing or if the data storage requirements change.
 
 ### Overview of the Hardware (View) Tier
-(Not typed yet)
+The Hardware Tier relies on the Controller Tier to know the
+state of the system, but not the other way around. The hardware
+has both a production implementation. Since the Controller Tier
+doesn't rely on the specific hardware classes, they can be
+replaced later. This is also used to make an emulated version
+for the command line to test without the hardware.
 
 ### Overview of the Controller Tier
-(Not typed yet)
+The Controller Tier handles modifications to the system's
+state (i.e. the instantiated models). It also abstracts
+the implementation requirements for the Hardware Tier.
+The primary "managers" that store a state, and also
+extend the `Observable` class include:
+- `StateManager` - Stores the machine state (`Active`,
+`Inactive`, and `Stopped`) and handles calls that would
+trigger changes to the state. This includes the emergency
+stop button being pressed, being released, and an id being
+swiped.
+- `SessionManager` - Stores the current session. Sessions
+are either created or terminated by `SystemStates`.
+- `ErrorManager` - Stores the current error message to
+display. It is up the observer to determine if it
+should be constantly displayed until something else
+happens, or if it should be shown for a few seconds.
+
+The secondary "managers" don't store a state, so they
+just act as mediators. This includes the following:
+- `SwipeManager` - Handles ids being swiped as the
+raw number for university ids. It handles interfacing
+with the database to determine if the user is valid,
+and invokes the current `SystemState` if the user 
+is able to start a session.
+- `DatabaseManager` - Handles getting user information
+from the centralized database on the network.
+- `Configurationm` - Reads the configuration. Since the
+configuration can be changed at any point, each call
+will read the current configuration file.
+
+Since states of the system are stored explicitly, the
+states are stored in the controller. These include:
+- `Stopped` - Represents the Emergency Stop being pressed.
+    - Emergency stop is pressed: Nothing happpens (shouldn't happen)
+    - Emergency stop is released: Set the state to be `Inactive`
+    - Id is swiped: An error is displayed that the machine is stopped
+- `Inactive` - Represents the Emergency Stop being released, but no session in progress.
+    - Emergency stop is pressed: Set the state to be `Stopped`
+    - Emergency stop is released: Nothing happpens (shouldn't happen)
+    - Id is swiped: Starts a new session
+- `Active` - Represents the Emergency Stop being released and a session is in progress.
+    - Emergency stop is pressed: End the current state and set the state to be `Stopped`
+    - Emergency stop is released: Nothing happpens (shouldn't happen)
+    - Id is swiped: Overrides the session with the new id
 
 ### Testing
 
 #### Acceptance Testing
 Acceptance testing is done to ensure functionality works
 outside of unit tests. The spreadsheet used for testing
-is contained in the `Tests` directory.
+is contained in the `tests` directory.
 
 #### Unit Testing
 Unit testing is done with the "PyUnit" / unittest framework.
-Tests are contained in the `Tests` directory. Code coverage
-isn't measured.
+Tests are contained in the `tests` directory. Code coverage
+isn't measured, but will be investigated soon.
