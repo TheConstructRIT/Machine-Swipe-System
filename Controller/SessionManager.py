@@ -6,6 +6,8 @@ Manages starting and maintaining sessions.
 
 import threading
 import time
+
+from Controller import DatabaseManager
 from Model import Session
 from Util import Observer
 
@@ -57,10 +59,15 @@ class SessionManager(Observer.Observable):
 	Starts a new session.
 	"""
 	def startSession(self,user):
+		# Log the session being ended if the id is changing.
+		if self.currentSession is not None and self.currentSession.getUser().getHashedId() != user.getHashedId():
+			DatabaseManager.sessionEnded(self.currentSession)
+
 		# Set the session.
 		newSession = Session.startSession(user)
 		self.currentSession = newSession
 		self.notify(newSession)
+		DatabaseManager.sessionStarted(newSession)
 
 		# Start a thread to expire the session.
 		sessionThread = SessionThread(self)
@@ -70,6 +77,10 @@ class SessionManager(Observer.Observable):
 	Ends the current session.
 	"""
 	def endSession(self):
+		# Log the session ending.
+		DatabaseManager.sessionEnded(self.currentSession)
+
+		# End the session.
 		self.currentSession = None
 		self.notify(None)
 

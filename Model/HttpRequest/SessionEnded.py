@@ -14,7 +14,7 @@ from Model.HttpRequest import HttpRequest
 """
 Class for logging sessions ending.
 """
-class SessionEnding(HttpRequest.HttpRequest):
+class SessionEnded(HttpRequest.HttpRequest):
 	"""
 	Creates the http request.
 	"""
