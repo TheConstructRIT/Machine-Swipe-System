@@ -4,12 +4,13 @@ Zachary Cook
 Manages reads to the configuration. Does not have a class implementation.
 """
 
-# The location of the configuration file.
-CONFIGURATION_FILE_LOCATION = "../configuration.json"
-
-
-
+import os
 import json
+
+
+# The location of the configuration file.
+BASE_DIRECTORY = os.path.realpath(__file__) + "/../../"
+CONFIGURATION_FILE_LOCATION = BASE_DIRECTORY + "configuration.json"
 
 
 
