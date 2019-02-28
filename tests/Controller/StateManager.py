@@ -6,11 +6,8 @@ Unit tests for the StateManager.
 
 import unittest
 import time
-from Controller import StateManager
+from Controller import StateManager, Observer
 from Model import User
-from Util import Observer
-
-
 
 """
 Test the SessionManager class.

@@ -4,9 +4,7 @@ Zachary Cook
 Manages error messages displayed by the view.
 """
 
-from Util import Observer
-
-
+from Controller import Observer
 
 """
 Class representing an error manager.

@@ -6,10 +6,8 @@ Unit tests for the SessionManager.
 
 import unittest
 import time
-from Controller import SessionManager
+from Controller import SessionManager, Observer
 from Model import User
-from Util import Observer
-
 
 """
 Test the SessionManager class.

@@ -6,9 +6,7 @@ Unit tests for the observer.
 
 import unittest
 
-from Util import Observer
-
-
+from Controller import Observer
 
 """
 Test observer pattern.

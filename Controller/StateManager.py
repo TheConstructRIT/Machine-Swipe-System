@@ -7,9 +7,7 @@ Manages states in the system.
 from Controller.States import Active
 from Controller.States import Inactive
 from Controller.States import Stopped
-from Util import Observer
-
-
+from Controller import Observer
 
 """
 Class representing a state manager.

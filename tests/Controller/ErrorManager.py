@@ -5,9 +5,7 @@ Unit tests for the ErrorManager.
 """
 
 import unittest
-from Controller import ErrorManager
-from Util import Observer
-
+from Controller import ErrorManager, Observer
 
 """
 Test the ErrorManager class.

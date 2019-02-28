@@ -5,10 +5,7 @@ Class representing the active system state.
 """
 
 from Controller.States import SystemState
-from Controller import SessionManager
-from Util import Observer
-
-
+from Controller import SessionManager, Observer
 
 """
 Observer for session changes.

@@ -7,11 +7,8 @@ Manages starting and maintaining sessions.
 import threading
 import time
 
-from Controller import DatabaseManager
+from Controller import DatabaseManager, Observer
 from Model import Session
-from Util import Observer
-
-
 
 """
 Thread that terminates sessions if they expire.
@@ -78,7 +75,8 @@ class SessionManager(Observer.Observable):
 	"""
 	def endSession(self):
 		# Log the session ending.
-		DatabaseManager.sessionEnded(self.currentSession)
+		if self.currentSession is not None:
+			DatabaseManager.sessionEnded(self.currentSession)
 
 		# End the session.
 		self.currentSession = None
