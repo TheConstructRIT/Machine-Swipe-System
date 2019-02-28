@@ -4,9 +4,7 @@ Zachary Cook
 Class representing a session for a user.
 """
 
-from Util import Time
-
-
+from Model import Time
 
 """
 Class for a session.
@@ -55,4 +53,4 @@ class Session():
 Creates a session for a user at the current time.
 """
 def startSession(user):
-	return Session(user,Time.getCurrentTimestamp())
+	return Session(user, Time.getCurrentTimestamp())
