@@ -23,6 +23,13 @@ class TestScrollingTextClass(unittest.TestCase):
 		ScrollingText.ScrollingText("TestTest",4,0.05)
 
 	"""
+	Tests the constructor with centering.
+	"""
+	def test_constructorCentering(self):
+		CuT = ScrollingText.ScrollingText("Test",8,0.05,"=")
+		self.assertEqual(CuT.getCurrentText(),"==Test==","Message isn't centered.")
+
+	"""
 	Tests the textFits method.
 	"""
 	def test_textFits(self):
@@ -53,33 +60,6 @@ class TestScrollingTextClass(unittest.TestCase):
 		time.sleep(0.05)
 		self.assertEqual(CuT1.getCurrentOffset(),0,"Offset is incorrect.")
 		self.assertEqual(CuT2.getCurrentOffset(),3,"Offset is incorrect.")
-
-
-	"""
-	Tests the getCurrentText method.
-	"""
-	def test_getCurrentText(self):
-		CuT1 = ScrollingText.ScrollingText("Test",4,0.05)
-		CuT2 = ScrollingText.ScrollingText("TestTest",4,0.05)
-
-		"""
-		Tests a message and waits.
-		"""
-		def testMessage(message2):
-			self.assertEqual(CuT1.getCurrentText(),"Test","Message is incorrect.")
-			self.assertEqual(CuT2.getCurrentText(),message2,"Message is incorrect.")
-			time.sleep(0.05)
-
-		testMessage("Test")
-		testMessage("estT")
-		testMessage("stTe")
-		testMessage("tTes")
-		testMessage("Test")
-		testMessage("est ")
-		testMessage("st T")
-		testMessage("t Te")
-		testMessage(" Tes")
-		testMessage("Test")
 
 
 
