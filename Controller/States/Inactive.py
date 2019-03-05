@@ -30,4 +30,4 @@ class Inactive(SystemState.SystemState):
 	"""
 	def idSwiped(self,User):
 		self.stateManager.setStateByName("Active")
-		SessionManager.getSessionManager().startSession(User)
+		SessionManager.startSession(User)

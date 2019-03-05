@@ -95,18 +95,6 @@ class TestSessionManagerClass(unittest.TestCase):
 		self.assertEqual(observer.getNotifiedSession(),None,"Current session is incorrect.")
 
 
-"""
-Test the static methods.
-"""
-class TestStaticMethods(unittest.TestCase):
-	"""
-	Test the getSessionManager method.
-	"""
-	def test_startSession(self):
-		CuT = SessionManager.getSessionManager()
-		self.assertTrue(isinstance(CuT,SessionManager.SessionManager),"Wrong type of object returned.")
-
-
 
 """
 Runs the unit tests.

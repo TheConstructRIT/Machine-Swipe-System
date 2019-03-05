@@ -25,4 +25,4 @@ def idSwiped(id):
 		return
 
 	# Start the session.
-	StateManager.getStateManager().idSwiped(user)
+	StateManager.idSwiped(user)

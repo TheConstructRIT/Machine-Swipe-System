@@ -31,7 +31,7 @@ class SystemState():
 	"""
 	Invoked when the emergency stop button is released.
 	"""
-	def emergencyStopReleased(self):
+	def emergencyStopButtonReleased(self):
 		pass
 
 	"""

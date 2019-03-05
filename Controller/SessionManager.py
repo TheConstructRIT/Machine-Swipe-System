@@ -88,7 +88,32 @@ class SessionManager(Observer.Observable):
 staticSessionManager = SessionManager()
 
 """
-Returns the static session manager.
+Returns the current session. If there is
+no current session, None is returned.
 """
-def getSessionManager():
-	return staticSessionManager
+def getCurrentSession():
+	return staticSessionManager.getCurrentSession()
+
+"""
+Starts a new session.
+"""
+def startSession(user):
+	staticSessionManager.startSession(user)
+
+"""
+Ends the current session.
+"""
+def endSession():
+	staticSessionManager.endSession()
+
+"""
+Registers an observer.
+"""
+def register(observer):
+	staticSessionManager.register(observer)
+
+"""
+Unregisters an observer.
+"""
+def unregister(observer):
+	staticSessionManager.unregister(observer)

@@ -167,19 +167,19 @@ class HardwareController():
 		# Set up the observers.
 		self.cardReader.register(CardReaderObserver(self))
 		self.emergencyStopButton.register(EmergencyStopButtonObserver(self))
-		StateManager.getStateManager().register(StateObserver(self))
-		SessionManager.getSessionManager().register(SessionObserver(self))
+		StateManager.register(StateObserver(self))
+		SessionManager.register(SessionObserver(self))
 		MessageManager.register(MessageObserver(self))
 
 		# Send the initial state for the e-stop.
 		if self.emergencyStopButton.isPressed():
-			StateManager.getStateManager().emergencyStopButtonPressed()
+			StateManager.emergencyStopButtonPressed()
 		else:
-			StateManager.getStateManager().emergencyStopReleased()
+			StateManager.emergencyStopButtonReleased()
 
 		# Set up the rest of the initial states.
 		self.currentSession = None
-		self.stateChanged(StateManager.getStateManager().getState())
+		self.stateChanged(StateManager.getState())
 		self.sessionChanged(None)
 		self.messageChanged("")
 
@@ -262,6 +262,6 @@ class HardwareController():
 	"""
 	def emergencyStopChanged(self,pressed):
 		if pressed:
-			StateManager.getStateManager().emergencyStopButtonPressed()
+			StateManager.emergencyStopButtonPressed()
 		else:
-			StateManager.getStateManager().emergencyStopReleased()
+			StateManager.emergencyStopButtonReleased()

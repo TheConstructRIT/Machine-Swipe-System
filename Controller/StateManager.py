@@ -49,14 +49,14 @@ class StateManager(Observer.Observable):
 	"""
 	Invoked when the emergency stop button is released.
 	"""
-	def emergencyStopReleased(self):
-		self.getState().emergencyStopReleased()
+	def emergencyStopButtonReleased(self):
+		self.getState().emergencyStopButtonReleased()
 
 	"""
 	Invoked when a user swipes their id.
 	"""
-	def idSwiped(self,User):
-		self.getState().idSwiped(User)
+	def idSwiped(self,user):
+		self.getState().idSwiped(user)
 
 
 
@@ -64,7 +64,43 @@ class StateManager(Observer.Observable):
 staticStateManager = StateManager()
 
 """
-Returns the static state manager.
+Returns the current state.
 """
-def getStateManager():
-	return staticStateManager
+def getState():
+	return staticStateManager.getState()
+
+"""
+Sets the current state.
+"""
+def setStateByName(stateName):
+	staticStateManager.setStateByName(stateName)
+
+"""
+Invoked when the emergency stop button is pressed.
+"""
+def emergencyStopButtonPressed():
+	staticStateManager.emergencyStopButtonPressed()
+
+"""
+Invoked when the emergency stop button is released.
+"""
+def emergencyStopButtonReleased():
+	staticStateManager.emergencyStopButtonReleased()
+
+"""
+Invoked when a user swipes their id.
+"""
+def idSwiped(user):
+	staticStateManager.idSwiped(user)
+
+"""
+Registers an observer.
+"""
+def register(observer):
+	staticStateManager.register(observer)
+
+"""
+Unregisters an observer.
+"""
+def unregister(observer):
+	staticStateManager.unregister(observer)

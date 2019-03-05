@@ -42,7 +42,7 @@ class Active(SystemState.SystemState):
 
 		# Set up the observer for session changes.
 		observer = SessionObserver(stateManager)
-		SessionManager.getSessionManager().register(observer)
+		SessionManager.register(observer)
 
 	"""
 	Returns the name of the state.
@@ -54,11 +54,11 @@ class Active(SystemState.SystemState):
 	Invoked when the emergency stop button is pressed.
 	"""
 	def emergencyStopButtonPressed(self):
-		SessionManager.getSessionManager().endSession()
+		SessionManager.endSession()
 		self.stateManager.setStateByName("Stopped")
 
 	"""
 	Invoked when a user swipes their id.
 	"""
 	def idSwiped(self,User):
-		SessionManager.getSessionManager().startSession(User)
+		SessionManager.startSession(User)

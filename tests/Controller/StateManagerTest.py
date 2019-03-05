@@ -69,7 +69,7 @@ class TestStateManagerClass(unittest.TestCase):
 		CuT = StateManager.StateManager()
 
 		CuT.setStateByName("Stopped")
-		CuT.emergencyStopReleased()
+		CuT.emergencyStopButtonReleased()
 		self.assertEqual(CuT.getState().getName(),"Inactive","State is incorrect.")
 
 	"""
@@ -99,7 +99,7 @@ class TestStateManagerClass(unittest.TestCase):
 		CuT = StateManager.StateManager()
 
 		CuT.setStateByName("Inactive")
-		CuT.emergencyStopReleased()
+		CuT.emergencyStopButtonReleased()
 		self.assertEqual(CuT.getState().getName(),"Inactive","State is incorrect.")
 
 	"""
@@ -129,7 +129,7 @@ class TestStateManagerClass(unittest.TestCase):
 		CuT = StateManager.StateManager()
 
 		CuT.setStateByName("Active")
-		CuT.emergencyStopReleased()
+		CuT.emergencyStopButtonReleased()
 		self.assertEqual(CuT.getState().getName(),"Active","State is incorrect.")
 
 	"""
@@ -153,19 +153,6 @@ class TestStateManagerClass(unittest.TestCase):
 		self.assertEqual(CuT.getState().getName(),"Active","State is incorrect.")
 		time.sleep(2)
 		self.assertEqual(CuT.getState().getName(),"Inactive","State is incorrect.")
-
-
-
-"""
-Test the static methods.
-"""
-class TestStaticMethods(unittest.TestCase):
-	"""
-	Test the getStateManager method.
-	"""
-	def test_startSession(self):
-		CuT = StateManager.getStateManager()
-		self.assertTrue(isinstance(CuT,StateManager.StateManager),"Wrong type of object returned.")
 
 
 
