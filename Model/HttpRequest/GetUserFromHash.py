@@ -23,7 +23,7 @@ class GetUserFromHash(HttpRequest.HttpRequest):
 		self.hashedId = hashedId
 
 		# Create the http request.
-		url = ""
+		url = ConfigurationManager.getServerEndpoint() + "/query?request=GetMachineUser&machine=" +ConfigurationManager.getMachineInternalName() + "&hashedid=" + str(hashedId)
 		default = "{\"name\":\"(Server offline)\",\"maxSessionTime\":" + str(ConfigurationManager.getDefaultSessionTime()) + "}"
 		super().__init__("GET",url,default)
 
@@ -31,7 +31,6 @@ class GetUserFromHash(HttpRequest.HttpRequest):
 	Returns the result.
 	"""
 	def getResponse(self):
-		print("GET")
 		# Get and parse the request.
 		jsonResponse = super().getResponse()
 		response = json.loads(jsonResponse)

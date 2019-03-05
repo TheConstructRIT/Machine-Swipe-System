@@ -4,6 +4,9 @@ Zachary Cook
 Base class for an http request.
 """
 
+from urllib.request import urlopen
+from urllib.error import URLError
+
 """
 "Abstract" class for an http request.
 """
@@ -20,5 +23,11 @@ class HttpRequest():
 	Returns the result.
 	"""
 	def getResponse(self):
-		# TODO: Send HTTP request
-		return self.default
+		# Perform the request and get the response.
+		try:
+			result = urlopen(self.url)
+			response = result.read().decode()
+
+			return response
+		except URLError as e:
+			return self.default

@@ -14,6 +14,9 @@ EMERGENCY_STOP_PRESSED_WARNING = "Machine stopped"
 # Message for a user being unregistered.
 UNREGISTERED_USER_MESSAGE = "You aren't registered"
 
+# Message for telling the user to wait for the request to load.
+PLEASE_WAIT_MESSAGE = "Please wait"
+
 
 
 """
