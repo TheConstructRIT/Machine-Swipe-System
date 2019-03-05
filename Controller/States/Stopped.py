@@ -5,7 +5,7 @@ Class representing the stopped system state.
 """
 
 from Controller.States import SystemState
-from Controller import ErrorManager
+from Controller import MessageManager
 
 
 
@@ -29,4 +29,4 @@ class Stopped(SystemState.SystemState):
 	Invoked when a user swipes their id.
 	"""
 	def idSwiped(self, User):
-		ErrorManager.getErrorManager().sendErrorMessage("Machine stopped")
+		MessageManager.sendMessage("Machine stopped")

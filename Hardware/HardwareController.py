@@ -8,7 +8,7 @@ import threading
 import time
 
 from Controller import Observer
-from Controller import ErrorManager
+from Controller import MessageManager
 from Controller import SessionManager
 from Controller import StateManager
 from Controller import SwipeManager
@@ -169,7 +169,7 @@ class HardwareController():
 		self.emergencyStopButton.register(EmergencyStopButtonObserver(self))
 		StateManager.getStateManager().register(StateObserver(self))
 		SessionManager.getSessionManager().register(SessionObserver(self))
-		ErrorManager.getErrorManager().register(MessageObserver(self))
+		MessageManager.register(MessageObserver(self))
 
 		# Send the initial state for the e-stop.
 		if self.emergencyStopButton.isPressed():
