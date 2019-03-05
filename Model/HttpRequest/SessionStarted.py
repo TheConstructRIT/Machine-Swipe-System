@@ -29,4 +29,5 @@ class SessionStarted(HttpRequest.HttpRequest):
 	Sends the request in a thread. Nothing is returned.
 	"""
 	def getResponse(self):
+		print("STARTED")
 		threading.Thread(target=super().getResponse).start()

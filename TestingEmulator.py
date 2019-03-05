@@ -32,10 +32,10 @@ class MockScreen():
 	"""
 	def __init__(self):
 		self.lines = [
-			ScrollingText.ScrollingText("",self.getLineLength(),0.1,"*"),
-			ScrollingText.ScrollingText("",self.getLineLength(),0.1," "),
-			ScrollingText.ScrollingText("",self.getLineLength(),0.1," "),
-			ScrollingText.ScrollingText("",self.getLineLength(),0.1," "),
+			ScrollingText.ScrollingText("",self.getLineLength(),0.1,"*",10),
+			ScrollingText.ScrollingText("",self.getLineLength(),0.1," ",10),
+			ScrollingText.ScrollingText("",self.getLineLength(),0.1," ",10),
+			ScrollingText.ScrollingText("",self.getLineLength(),0.1," ",10),
 		]
 
 	"""
@@ -48,7 +48,7 @@ class MockScreen():
 	Sets the text for a line.
 	"""
 	def setLineText(self,lineNumber,message):
-		self.lines[lineNumber] = ScrollingText.ScrollingText(message,20,0.1,(lineNumber == 0 and "*" or " "))
+		self.lines[lineNumber] = ScrollingText.ScrollingText(message,20,0.1,(lineNumber == 0 and "*" or " "),10)
 
 	"""
 	Returns all of the lines as text separated by lines.

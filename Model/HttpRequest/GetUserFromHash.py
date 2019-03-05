@@ -31,6 +31,7 @@ class GetUserFromHash(HttpRequest.HttpRequest):
 	Returns the result.
 	"""
 	def getResponse(self):
+		print("GET")
 		# Get and parse the request.
 		jsonResponse = super().getResponse()
 		response = json.loads(jsonResponse)

@@ -13,12 +13,13 @@ class ScrollingText():
 	"""
 	Creates the scrolling text.
 	"""
-	def __init__(self,text,maxLength,shiftTime,sideCharacter = ""):
+	def __init__(self,text,maxLength,shiftTime,sideCharacter = "",scrollingSpacing=1):
 		self.text = text
 		self.maxLength = maxLength
 		self.shiftTime = shiftTime
 		self.startTime = Time.getCurrentTimestamp()
 		self.sideCharacter = sideCharacter
+		self.scrollingSpacing = scrollingSpacing
 
 	"""
 	Returns if the text fits.
@@ -33,7 +34,7 @@ class ScrollingText():
 		if self.textFits():
 			return 0
 		else:
-			return int(((Time.getCurrentTimestamp() - self.startTime) / self.shiftTime) % (len(self.text) + 1))
+			return int(((Time.getCurrentTimestamp() - self.startTime) / self.shiftTime) % (len(self.text) + self.scrollingSpacing))
 
 	"""
 	Returns the current string to display.
@@ -48,6 +49,6 @@ class ScrollingText():
 			return (self.sideCharacter * signsBefore) + self.text + (self.sideCharacter * signsAfter)
 		else:
 			# Cut the text.
-			doubleText = self.text + " " + self.text
+			doubleText = self.text + (" " * self.scrollingSpacing) + self.text
 			offset = self.getCurrentOffset()
 			return doubleText[offset:offset + self.maxLength]
