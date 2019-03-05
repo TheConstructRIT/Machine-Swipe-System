@@ -6,10 +6,12 @@ Emulates the hardware for testing.
 
 import turtle
 import time
+import threading
 
 from Controller import Observer
 from Hardware import HardwareController
 from Model import ScrollingText
+from Model import Time
 
 
 
@@ -111,6 +113,31 @@ class MockEmergencyStopButton(Observer.Observable):
 		return self.pressed
 
 """
+Mock class for the buzzer.
+"""
+class MockBuzzer():
+	"""
+	Crates the mock buzzer.
+	"""
+	def __init__(self):
+		self.lastTime = 0
+
+	"""
+	Pulses the buzzer.
+	"""
+	def pulseBuzzer(self,pulseCount = 1,delay = 0.1):
+		# Pulses the buzzer.
+		def pulse():
+			for _ in range(0,pulseCount):
+				self.lastTime = Time.getCurrentTimestamp()
+				if delay == 0.1:
+					time.sleep(0.2)
+				else:
+					time.sleep(delay)
+
+		# Create the thread.
+		threading.Thread(target=pulse).start()
+"""
 Window used for displaying the demo.
 """
 class TestWindow():
@@ -204,9 +231,11 @@ class Emulator():
 		self.mockCardReader = mockCardReader
 		mockEmergencyStopButton = MockEmergencyStopButton()
 		self.mockEmergencyStopButton = mockEmergencyStopButton
+		mockBuzzer = MockBuzzer()
+		self.mockBuzzer = mockBuzzer
 
 		# Create the hardware controller.
-		controller = HardwareController.HardwareController(mockScreen,mockLEDs,mockCardReader,mockEmergencyStopButton)
+		controller = HardwareController.HardwareController(mockScreen,mockLEDs,mockCardReader,mockEmergencyStopButton,mockBuzzer)
 		self.controller = controller
 
 		# Create the display.
@@ -221,6 +250,7 @@ class Emulator():
 	def createDisplay(self):
 		self.window = TestWindow()
 		self.lastLEDColor = ""
+		self.buzzerOn = True
 
 		# Create the main display.
 		self.lastText = ""
@@ -244,10 +274,15 @@ class Emulator():
 			self.window.drawRectangle(posX,posY,320,36,"#FFFFFF","#00FF00")
 			self.window.drawText("Swipe " + id,posX + 20,posY - 36)
 
-			# Create the callback.
-			def swipeId():
-				self.mockCardReader.swipeId(id)
-			self.window.registerClick(posX,posY,320,36,swipeId)
+			# Creates a callback.
+			def createSwipeIdCallback(idToSwipe):
+				# Create the callback.
+				def swipeId():
+					self.mockCardReader.swipeId(idToSwipe)
+
+				return swipeId
+
+			self.window.registerClick(posX,posY,320,36,createSwipeIdCallback(id))
 
 	"""
 	Updates the display.
@@ -266,6 +301,15 @@ class Emulator():
 			self.lastLEDColor = newLEDColor
 			self.window.drawRectangle(-310,-40,300,80,"#FFFFFF",newLEDColor)
 
+		# Update the buzzer.
+		newBuzzerState = (Time.getCurrentTimestamp() - self.mockBuzzer.lastTime) < 0.1
+		if newBuzzerState != self.buzzerOn:
+			self.buzzerOn = newBuzzerState
+			if self.buzzerOn:
+				self.window.drawRectangle(330,-130,60,60,"#FFFFFF","#00FF00")
+			else:
+				self.window.drawRectangle(330,-130,60,60,"#FFFFFF","#FF0000")
+
 		# Update the display.
 		self.window.update()
 
@@ -275,7 +319,7 @@ class Emulator():
 	def startUpdateLoop(self):
 		while True:
 			self.updateDisplay()
-			time.sleep(0.05)
+			time.sleep(1/60)
 
 
 

@@ -7,6 +7,7 @@ Controls the hardware and makes interactions with the system.
 import threading
 import time
 
+from Controller import ConfigurationManager
 from Controller import Observer
 from Controller import MessageManager
 from Controller import SessionManager
@@ -111,13 +112,28 @@ class SessionTimer(threading.Thread):
 	def __init__(self,hardwareController):
 		super().__init__()
 		self.hardwareController = hardwareController
+		self.lastTimeLeft = 0
+		self.buzzerStartTime = ConfigurationManager.getWarningAlarmActivationTime()
 
 	"""
 	Updates the timer.
 	"""
 	def updateTime(self,session):
 		if session is not None:
-			self.hardwareController.screen.setLineText(2,Time.formatTime(session.getRemainingTime()) + " Remaining")
+			# Update the remaining time.
+			timeLeft = session.getRemainingTime()
+			self.hardwareController.screen.setLineText(2,Time.formatTime(timeLeft) + " Remaining")
+
+			# Display the time limit warning.
+			currentTimeBelowLimit = timeLeft < self.buzzerStartTime
+			lastTimeBelowLimit = self.lastTimeLeft < self.buzzerStartTime
+			if lastTimeBelowLimit == False and currentTimeBelowLimit == True:
+				self.hardwareController.displayMessage("Session expiring soon, extend session!",10)
+				self.hardwareController.buzzer.pulseBuzzer(5,1)
+
+			self.lastTimeLeft = timeLeft
+
+
 
 	"""
 	Loop for the timer.
@@ -157,12 +173,13 @@ class HardwareController():
 	"""
 	Creates the hardware controller.
 	"""
-	def __init__(self,screen,leds,cardReader,emergencyStopButton):
+	def __init__(self,screen,leds,cardReader,emergencyStopButton,buzzer):
 		# Store the hardware.
 		self.screen = screen
 		self.leds = leds
 		self.cardReader = cardReader
 		self.emergencyStopButton = emergencyStopButton
+		self.buzzer = buzzer
 
 		# Set up the observers.
 		self.cardReader.register(CardReaderObserver(self))
@@ -239,17 +256,24 @@ class HardwareController():
 			# Display the started or extended message.
 			if lastSession is None:
 				self.messageChanged("Started session")
+				self.buzzer.pulseBuzzer(2)
 			else:
-				if lastSession.getUser().getName() == newSession.getUser().getName():
+				if lastSession.getUser().getHashedId() == newSession.getUser().getHashedId():
 					self.messageChanged("Extended session")
+					self.buzzer.pulseBuzzer(2)
 				else:
 					self.messageChanged("Started session")
+					self.buzzer.pulseBuzzer(2)
 
 	"""
 	Handles the message being changed.
 	"""
 	def messageChanged(self,newMessage):
 		self.displayMessage(newMessage)
+
+		# Handle the message being changed.
+		if newMessage == MessageManager.EMERGENCY_STOP_PRESSED_WARNING or newMessage == MessageManager.UNREGISTERED_USER_MESSAGE:
+			self.buzzer.pulseBuzzer(3)
 
 	"""
 	Handles an id being swiped.

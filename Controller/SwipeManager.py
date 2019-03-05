@@ -21,7 +21,7 @@ def idSwiped(id):
 
 	# Display an error if the user isn't registered.
 	if user is None:
-		MessageManager.sendMessage("You aren't registered")
+		MessageManager.sendMessage(MessageManager.UNREGISTERED_USER_MESSAGE)
 		return
 
 	# Start the session.

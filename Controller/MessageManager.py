@@ -8,6 +8,14 @@ from Controller import Observer
 
 
 
+# Message for the E-Stop being pressed.
+EMERGENCY_STOP_PRESSED_WARNING = "Machine stopped"
+
+# Message for a user being unregistered.
+UNREGISTERED_USER_MESSAGE = "You aren't registered"
+
+
+
 """
 Class representing an error manager.
 """

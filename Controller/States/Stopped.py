@@ -29,4 +29,4 @@ class Stopped(SystemState.SystemState):
 	Invoked when a user swipes their id.
 	"""
 	def idSwiped(self, User):
-		MessageManager.sendMessage("Machine stopped")
+		MessageManager.sendMessage(MessageManager.EMERGENCY_STOP_PRESSED_WARNING)
