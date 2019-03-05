@@ -22,12 +22,12 @@ class SessionStarted(HttpRequest.HttpRequest):
 		self.hashedId = hashedId
 
 		# Create the http request.
-		url = ""
-		super().__init__("POST",url)
+		url = ConfigurationManager.getServerEndpoint() + "/query"
+		urlArgs = "request=MachineSessionStarted&machine=" +ConfigurationManager.getMachineInternalName() + "&hashedid=" + str(hashedId)
+		super().__init__("POST",url,urlArgs=urlArgs)
 
 	"""
 	Sends the request in a thread. Nothing is returned.
 	"""
 	def getResponse(self):
-		print("STARTED")
 		threading.Thread(target=super().getResponse).start()

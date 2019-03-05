@@ -18,7 +18,7 @@ from Model import Time
 
 
 # Duration for error messages.
-MESSAGE_DURATION = 3
+MESSAGE_DURATION = 5
 
 
 
