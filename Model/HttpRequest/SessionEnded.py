@@ -30,5 +30,4 @@ class SessionEnded(HttpRequest.HttpRequest):
 	Sends the request in a thread. Nothing is returned.
 	"""
 	def getResponse(self):
-		print("ENDED")
 		threading.Thread(target=super().getResponse).start()
