@@ -132,6 +132,8 @@ class SessionTimer(threading.Thread):
 				self.hardwareController.buzzer.pulseBuzzer(5,1)
 
 			self.lastTimeLeft = timeLeft
+		else:
+			self.lastTimeLeft = 0
 
 
 
@@ -173,13 +175,14 @@ class HardwareController():
 	"""
 	Creates the hardware controller.
 	"""
-	def __init__(self,screen,leds,cardReader,emergencyStopButton,buzzer):
+	def __init__(self,screen,leds,cardReader,emergencyStopButton,buzzer,relay):
 		# Store the hardware.
 		self.screen = screen
 		self.leds = leds
 		self.cardReader = cardReader
 		self.emergencyStopButton = emergencyStopButton
 		self.buzzer = buzzer
+		self.relay = relay
 
 		# Set up the observers.
 		self.cardReader.register(CardReaderObserver(self))
@@ -265,6 +268,11 @@ class HardwareController():
 					self.messageChanged("Started session")
 					self.buzzer.pulseBuzzer(2)
 
+			# Set the relay as active.
+			self.relay.setActive(True)
+		else:
+			self.relay.setActive(False)
+
 	"""
 	Handles the message being changed.
 	"""
@@ -272,7 +280,7 @@ class HardwareController():
 		self.displayMessage(newMessage)
 
 		# Handle the message being changed.
-		if newMessage == MessageManager.EMERGENCY_STOP_PRESSED_WARNING or newMessage == MessageManager.UNREGISTERED_USER_MESSAGE:
+		if newMessage == MessageManager.EMERGENCY_STOP_PRESSED_WARNING or newMessage == MessageManager.UNREGISTERED_USER_MESSAGE or newMessage == MessageManager.UNAUTHORIZED_MESSAGE:
 			self.buzzer.pulseBuzzer(3)
 
 	"""

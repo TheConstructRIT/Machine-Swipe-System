@@ -5,7 +5,9 @@ Class representing the active system state.
 """
 
 from Controller.States import SystemState
-from Controller import SessionManager, Observer
+from Controller import MessageManager
+from Controller import Observer
+from Controller import SessionManager
 
 """
 Observer for session changes.
@@ -60,5 +62,11 @@ class Active(SystemState.SystemState):
 	"""
 	Invoked when a user swipes their id.
 	"""
-	def idSwiped(self,User):
-		SessionManager.startSession(User)
+	def idSwiped(self,user):
+		# Display an error if the user isn't authorized (session time is 0).
+		if user.getSessionTime() <= 0:
+			MessageManager.sendMessage(MessageManager.UNAUTHORIZED_MESSAGE)
+			return
+
+		# Start the session.
+		SessionManager.startSession(user)

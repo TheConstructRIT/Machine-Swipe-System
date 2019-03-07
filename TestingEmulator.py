@@ -18,7 +18,7 @@ from Model import Time
 # The id buttons to create.
 SWIPE_IDS = [
 	"000000001",
-	"000000002",
+	"565000953",
 ]
 
 
@@ -137,6 +137,25 @@ class MockBuzzer():
 
 		# Create the thread.
 		threading.Thread(target=pulse).start()
+
+"""
+Mock class for a relay.
+"""
+class MockRelay():
+	"""
+	Creates the mock relay.
+	"""
+	def __init__(self):
+		self.active = False
+
+	"""
+	Sets the relay as active.
+	"""
+	def setActive(self,active):
+		self.active = active
+
+
+
 """
 Window used for displaying the demo.
 """
@@ -213,6 +232,8 @@ class TestWindow():
 		self.turtle.write(text,font=("Courier New",24))
 		self.turtle.up()
 
+
+
 """
 Creates a GUI for emulating the hardware. The key switch is not
 emulated because it has no interaction with the software.
@@ -233,9 +254,11 @@ class Emulator():
 		self.mockEmergencyStopButton = mockEmergencyStopButton
 		mockBuzzer = MockBuzzer()
 		self.mockBuzzer = mockBuzzer
+		mockRelay = MockRelay()
+		self.mockRelay = mockRelay
 
 		# Create the hardware controller.
-		controller = HardwareController.HardwareController(mockScreen,mockLEDs,mockCardReader,mockEmergencyStopButton,mockBuzzer)
+		controller = HardwareController.HardwareController(mockScreen,mockLEDs,mockCardReader,mockEmergencyStopButton,mockBuzzer,mockRelay)
 		self.controller = controller
 
 		# Create the display.

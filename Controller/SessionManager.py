@@ -7,7 +7,8 @@ Manages starting and maintaining sessions.
 import threading
 import time
 
-from Controller import DatabaseManager, Observer
+from Controller import DatabaseManager
+from Controller import Observer
 from Model import Session
 
 """

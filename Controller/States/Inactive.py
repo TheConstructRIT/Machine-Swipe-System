@@ -5,6 +5,7 @@ Class representing the inactive system state.
 """
 
 from Controller.States import SystemState
+from Controller import MessageManager
 from Controller import SessionManager
 
 
@@ -28,6 +29,12 @@ class Inactive(SystemState.SystemState):
 	"""
 	Invoked when a user swipes their id.
 	"""
-	def idSwiped(self,User):
+	def idSwiped(self,user):
+		# Display an error if the user isn't authorized (session time is 0).
+		if user.getSessionTime() <= 0:
+			MessageManager.sendMessage(MessageManager.UNAUTHORIZED_MESSAGE)
+			return
+
+		# Start the session.
 		self.stateManager.setStateByName("Active")
-		SessionManager.startSession(User)
+		SessionManager.startSession(user)
