@@ -10,7 +10,7 @@ import json
 
 # The location of the configuration file.
 BASE_DIRECTORY = os.path.realpath(__file__) + "/../../"
-CONFIGURATION_FILE_LOCATION = BASE_DIRECTORY + "configuration.json"
+CONFIGURATION_FILE_LOCATION = os.path.realpath(BASE_DIRECTORY + "configuration.json")
 
 
 
