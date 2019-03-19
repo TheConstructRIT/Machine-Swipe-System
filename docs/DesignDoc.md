@@ -82,24 +82,21 @@ Other:
 - The system should be written in Python 3.
 - The system must use The Construct @ RIT's database system.
 
-## Hardware Configuration
-This section will be written later. The wiring of the GPIO pins
-still needs to be turned into a diagram.
-
 ## Architecture and Design
 All diagrams shown were made in [draw.io](draw.io), and are stored
 in `\docs\diagrams`.
 
 ### Domain Model
-![domain model](diagrams/Machine-Swipe-System-Domain-Model.png)
+![domain model](Machine-Swipe-System-Domain-Model.png)
 
 ### System States
-![state diagram](diagrams/Machine-Swipe-System-State-Diagram.png)
+![state diagram](Machine-Swipe-System-State-Diagram.png)
 
 ### Design Patterns
 The design patterns used, defined by the "Gang of Four", include:
 - Command - HTTP requests are encapsulated to decouple the HTTP requests from the system requests.
 - Observer - changes to some model elements will be organized through the observer pattern.
+- Singleton - Only one instance of the "services" is allowed to exist.
 - State - the state of the system is maintained explicitly, and transitions are managed by the states.
 
 ### Summary
@@ -110,7 +107,7 @@ implementation. The system is divided into the following:
 - Controller - handles the interface between the hardware and model, as well as changes to the model.
 
 ### Class Diagram
-![class diagram](diagrams/Machine-Swipe-System-Class-Diagram.png)
+![class diagram](Machine-Swipe-System-Class-Diagram.png)
 
 ### Overview of the Model Tier
 The Model Tier primarily consists of data classes. This 
@@ -142,7 +139,13 @@ state of the system, but not the other way around. The hardware
 has both a production implementation. Since the Controller Tier
 doesn't rely on the specific hardware classes, they can be
 replaced later. This is also used to make an emulated version
-for the command line to test without the hardware.
+for the command line to test without the hardware. 
+The main class used as controller for all of the hardware is the
+`HardwareController`, which takes in a set of hardware. The
+hardware classes can either be actual objects or mock versions
+for testing in a virtual environment (such as `TestingEmulator.py`).
+The hardware for the pi include the `Buzzer`, `CardReader`,
+`EmergencyStopButton`, `LCDScreen`, `LEDs`, and `Relay`.
 
 ### Overview of the Controller Tier
 The Controller Tier handles modifications to the system's
@@ -157,7 +160,7 @@ stop button being pressed, being released, and an id being
 swiped.
 - `SessionManager` - Stores the current session. Sessions
 are either created or terminated by `SystemStates`.
-- `ErrorManager` - Stores the current error message to
+- `MessageManager` - Stores the current message to
 display. It is up the observer to determine if it
 should be constantly displayed until something else
 happens, or if it should be shown for a few seconds.
@@ -171,7 +174,7 @@ and invokes the current `SystemState` if the user
 is able to start a session.
 - `DatabaseManager` - Handles getting user information
 from the centralized database on the network.
-- `Configurationm` - Reads the configuration. Since the
+- `ConfigurationManager` - Reads the configuration. Since the
 configuration can be changed at any point, each call
 will read the current configuration file.
 
@@ -199,5 +202,4 @@ is contained in the `tests` directory.
 
 #### Unit Testing
 Unit testing is done with the "PyUnit" / unittest framework.
-Tests are contained in the `tests` directory. Code coverage
-isn't measured, but will be investigated soon.
+Tests are contained in the `tests` directory.
