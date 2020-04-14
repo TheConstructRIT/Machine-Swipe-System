@@ -32,10 +32,10 @@ class MockScreen():
 	"""
 	def __init__(self):
 		self.lines = [
-			ScrollingText.ScrollingText("",self.getLineLength(),0.1,"*",10),
-			ScrollingText.ScrollingText("",self.getLineLength(),0.1," ",10),
-			ScrollingText.ScrollingText("",self.getLineLength(),0.1," ",10),
-			ScrollingText.ScrollingText("",self.getLineLength(),0.1," ",10),
+			ScrollingText.ScrollingText("",self.getLineLength(),0.2,"*",10),
+			ScrollingText.ScrollingText("",self.getLineLength(),0.2," ",10),
+			ScrollingText.ScrollingText("",self.getLineLength(),0.2," ",10),
+			ScrollingText.ScrollingText("",self.getLineLength(),0.2," ",10),
 		]
 
 	"""
