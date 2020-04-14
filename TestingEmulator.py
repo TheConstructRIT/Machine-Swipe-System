@@ -67,6 +67,22 @@ class MockLEDs():
 		self.currentColor = "Yellow"
 
 	"""
+	Pulses the LEDs.
+	"""
+	def pulseColor(self, newColor,pulseCount=1,delay=0.1):
+		# Pulses the color.
+		def pulse():
+			for _ in range(0, pulseCount):
+				originalColor = self.currentColor
+				self.setColor(newColor)
+				time.sleep(0.075)
+				self.setColor(originalColor)
+				time.sleep(delay - 0.075)
+
+		# Create and start the thread.
+		threading.Thread(target=pulse).start()
+
+	"""
 	Sets the color.
 	"""
 	def setColor(self,colorName):

@@ -130,6 +130,7 @@ class SessionTimer(threading.Thread):
 			if lastTimeBelowLimit == False and currentTimeBelowLimit == True:
 				self.hardwareController.displayMessage("Session expiring soon, extend session!",10)
 				self.hardwareController.buzzer.pulseBuzzer(5,1)
+				self.hardwareController.leds.pulseColor("Red",5,1)
 
 			self.lastTimeLeft = timeLeft
 		else:
@@ -260,13 +261,16 @@ class HardwareController():
 			if lastSession is None:
 				self.messageChanged("Started session")
 				self.buzzer.pulseBuzzer(2)
+				self.leds.pulseColor("Red",2)
 			else:
 				if lastSession.getUser().getHashedId() == newSession.getUser().getHashedId():
 					self.messageChanged("Extended session")
 					self.buzzer.pulseBuzzer(2)
+					self.leds.pulseColor("Yellow",2)
 				else:
 					self.messageChanged("Started session")
 					self.buzzer.pulseBuzzer(2)
+					self.leds.pulseColor("Yellow",2)
 
 			# Set the relay as active.
 			self.relay.setActive(True)
@@ -282,6 +286,7 @@ class HardwareController():
 		# Handle the message being changed.
 		if newMessage == MessageManager.EMERGENCY_STOP_PRESSED_WARNING or newMessage == MessageManager.UNREGISTERED_USER_MESSAGE or newMessage == MessageManager.UNAUTHORIZED_MESSAGE:
 			self.buzzer.pulseBuzzer(3)
+			self.leds.pulseColor("Red",3)
 
 	"""
 	Handles an id being swiped.
