@@ -16,6 +16,7 @@ class TestSessionManagerClass(unittest.TestCase):
 	Sets up the unit test.
 	"""
 	def setUp(self):
+		SessionManager.DatabaseManager.staticDatabaseManager = SessionManager.DatabaseManager.DatabaseManager(":memory:")
 		self.testUser1 = User.User("000000000",1)
 		self.testUser2 = User.User("000000001",1)
 
