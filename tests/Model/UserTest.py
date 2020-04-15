@@ -34,17 +34,6 @@ class TestUserClass(unittest.TestCase):
 		self.assertEqual(CuT.getSessionTime(),100,"Incorrect max session time stored.")
 
 
-"""
-Test the static methods.
-"""
-class TestStaticMethods(unittest.TestCase):
-	"""
-	Test the getHashFromId method.
-	"""
-	def test_getHashFromId(self):
-		self.assertEqual(User.getHashFromId(565000953),"b63205aee6692d81a2f326682c2e4aea370aec10d34e79231ef63e75f6614226","Hash is incorrect.")
-
-
 
 """
 Runs the unit tests.
