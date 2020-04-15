@@ -19,7 +19,7 @@ class TestSessionClass(unittest.TestCase):
 	Sets up the unit test.
 	"""
 	def setUp(self):
-		self.testUser = User.User("TestHash",20)
+		self.testUser = User.User("000000000",20)
 
 	"""
 	Tests the constructor.
@@ -58,7 +58,7 @@ class TestStaticMethods(unittest.TestCase):
 	Sets up the unit test.
 	"""
 	def setUp(self):
-		self.testUser = User.User("TestHash",20)
+		self.testUser = User.User("000000000",20)
 
 	"""
 	Test the startSession method.

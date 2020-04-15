@@ -15,15 +15,15 @@ class User():
 	"""
 	Constructor for the user.
 	"""
-	def __init__(self,hashedId,maxSessionTime):
-		self.hashedId = hashedId
+	def __init__(self,id,maxSessionTime):
+		self.id = id
 		self.maxSessionTime = maxSessionTime
 
 	"""
-	Returns the hash of the user's id.
+	Returns the user's id.
 	"""
-	def getHashedId(self):
-		return self.hashedId
+	def getId(self):
+		return self.id
 
 	"""
 	Returns the max session time.

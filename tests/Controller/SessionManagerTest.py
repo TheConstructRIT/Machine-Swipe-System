@@ -17,7 +17,7 @@ class TestSessionManagerClass(unittest.TestCase):
 	Sets up the unit test.
 	"""
 	def setUp(self):
-		self.testUser = User.User("TestHash",1)
+		self.testUser = User.User("000000000",1)
 
 	"""
 	Tests the constructor.

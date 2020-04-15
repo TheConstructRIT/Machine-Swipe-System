@@ -17,20 +17,20 @@ class TestUserClass(unittest.TestCase):
 	Tests the constructor.
 	"""
 	def test_constructor(self):
-		User.User("TestHash",100)
+		User.User("000000000",100)
 
 	"""
-	Tests the getHashedId method.
+	Tests the getId method.
 	"""
 	def test_getHashedId(self):
-		CuT = User.User("TestHash",100)
-		self.assertEqual(CuT.getHashedId(),"TestHash","Incorrect hash stored.")
+		CuT = User.User("000000000",100)
+		self.assertEqual(CuT.getId(),"000000000","Incorrect id stored.")
 
 	"""
 	Tests the getSessionTime method.
 	"""
 	def test_getSessionTime(self):
-		CuT = User.User("TestHash",100)
+		CuT = User.User("000000000",100)
 		self.assertEqual(CuT.getSessionTime(),100,"Incorrect max session time stored.")
 
 

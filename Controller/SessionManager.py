@@ -58,7 +58,7 @@ class SessionManager(Observer.Observable):
 	"""
 	def startSession(self,user):
 		# Log the session being ended if the id is changing.
-		if self.currentSession is not None and self.currentSession.getUser().getHashedId() != user.getHashedId():
+		if self.currentSession is not None and self.currentSession.getUser().getId() != user.getId():
 			DatabaseManager.sessionEnded(self.currentSession)
 
 		# Set the session.
