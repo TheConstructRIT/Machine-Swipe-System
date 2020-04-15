@@ -15,9 +15,8 @@ class User():
 	"""
 	Constructor for the user.
 	"""
-	def __init__(self,hashedId,name,maxSessionTime):
+	def __init__(self,hashedId,maxSessionTime):
 		self.hashedId = hashedId
-		self.name = name
 		self.maxSessionTime = maxSessionTime
 
 	"""
@@ -25,12 +24,6 @@ class User():
 	"""
 	def getHashedId(self):
 		return self.hashedId
-
-	"""
-	Returns the name of the user.
-	"""
-	def getName(self):
-		return self.name
 
 	"""
 	Returns the max session time.

@@ -37,4 +37,4 @@ class GetUserFromHash(HttpRequest.HttpRequest):
 
 		# Return a user if one exists.
 		if "name" in response and "maxSessionTime" in response:
-			return User.User(self.hashedId,response["name"],response["maxSessionTime"])
+			return User.User(self.hashedId,response["maxSessionTime"])
