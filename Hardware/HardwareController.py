@@ -254,7 +254,7 @@ class HardwareController():
 
 		# Set the text if the session exists.
 		if newSession is not None:
-			self.screen.setLineText(1,newSession.getUser().getName())
+			self.screen.setLineText(1,ConfigurationManager.getMachineName())
 			self.sessionTimerThread.updateTime(newSession)
 
 			# Display the started or extended message.

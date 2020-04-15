@@ -75,9 +75,9 @@ class MockLEDs():
 			for _ in range(0, pulseCount):
 				originalColor = self.currentColor
 				self.setColor(newColor)
-				time.sleep(0.075)
+				time.sleep(0.05)
 				self.setColor(originalColor)
-				time.sleep(delay - 0.075)
+				time.sleep(delay - 0.05)
 
 		# Create and start the thread.
 		threading.Thread(target=pulse).start()
