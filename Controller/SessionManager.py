@@ -27,12 +27,11 @@ class SessionThread(threading.Thread):
 	Logic for the thread.
 	"""
 	def run(self):
-		# Wait for the session to be overridden or the session to expire.
-		while self.sessionManager.getCurrentSession() == self.currentSession and self.currentSession.getRemainingTime() > 0:
-			time.sleep(0.1)
+		# Wait for the session to finish.
+		time.sleep(self.currentSession.getRemainingTime())
 
-		# If the session expired, end the session.
-		if self.sessionManager.getCurrentSession() == self.currentSession and self.currentSession.getRemainingTime() < 0:
+		# If the session expired and active, end the session.
+		if self.sessionManager.currentSession == self.currentSession and self.currentSession.getRemainingTime() <= 0:
 			self.sessionManager.endSession()
 
 """
@@ -51,6 +50,11 @@ class SessionManager(Observer.Observable):
 	no current session, None is returned.
 	"""
 	def getCurrentSession(self):
+		# End the session if the session is invalid.
+		if self.currentSession is not None and self.currentSession.getRemainingTime() <= 0:
+			self.endSession()
+
+		# Return the current session.
 		return self.currentSession
 
 	"""
@@ -69,6 +73,7 @@ class SessionManager(Observer.Observable):
 
 		# Start a thread to expire the session.
 		sessionThread = SessionThread(self)
+		sessionThread.daemon = True
 		sessionThread.start()
 
 	"""

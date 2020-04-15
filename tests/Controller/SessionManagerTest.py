@@ -5,7 +5,6 @@ Unit tests for the SessionManager.
 """
 
 import unittest
-import time
 from Controller import SessionManager, Observer
 from Model import User
 
@@ -95,7 +94,6 @@ class TestSessionManagerClass(unittest.TestCase):
 		CuT.register(observer)
 		CuT.startSession(self.testUser1)
 		CuT.getCurrentSession().sessionStart = 0
-		time.sleep(0.2)
 		self.assertEqual(CuT.getCurrentSession(),None,"Current session is incorrect.")
 		self.assertEqual(observer.getNotifiedSession(),None,"Current session is incorrect.")
 
