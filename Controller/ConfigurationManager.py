@@ -35,31 +35,16 @@ def readSetting(settingName):
 
 
 """
-Returns the internal name for the machine. This is used for interfacing
-with the databases for determining the length of sessions.
-"""
-def getMachineInternalName():
-	return readSetting("InternalName")
-
-"""
 Returns the display name for the machine.
 """
 def getMachineName():
 	return readSetting("DisplayName")
 
 """
-Returns the default session time. This is used when the server is
-unreachable. If it is less than or equal to 0, the machine will
-be disabled when the server is unreachable.
+Returns the default session time.
 """
 def getDefaultSessionTime():
 	return readSetting("DefaultSessionTime")
-
-"""
-Returns the server endpoint.
-"""
-def getServerEndpoint():
-	return readSetting("ServerEndpoint")
 
 """
 Returns the time (in seconds) left in a session for the buzzer

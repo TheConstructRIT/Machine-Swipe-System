@@ -22,9 +22,18 @@ class TestUserClass(unittest.TestCase):
 	"""
 	Tests the getId method.
 	"""
-	def test_getHashedId(self):
+	def test_getId(self):
 		CuT = User.User("000000000",100)
 		self.assertEqual(CuT.getId(),"000000000","Incorrect id stored.")
+
+	"""
+	Tests the getAccessType method.
+	"""
+	def test_getAccessType(self):
+		CuT1 = User.User("000000000",100,"AUTHORIZED")
+		CuT2 = User.User("000000000",100)
+		self.assertEqual(CuT1.getAccessType(),"AUTHORIZED","Incorrect access type stored.")
+		self.assertEqual(CuT2.getAccessType(),"UNAUTHORIZED","Incorrect default access type stored.")
 
 	"""
 	Tests the getSessionTime method.

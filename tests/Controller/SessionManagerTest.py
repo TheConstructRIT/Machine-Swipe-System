@@ -17,7 +17,8 @@ class TestSessionManagerClass(unittest.TestCase):
 	Sets up the unit test.
 	"""
 	def setUp(self):
-		self.testUser = User.User("000000000",1)
+		self.testUser1 = User.User("000000000",1)
+		self.testUser2 = User.User("000000001",1)
 
 	"""
 	Tests the constructor.
@@ -48,9 +49,12 @@ class TestSessionManagerClass(unittest.TestCase):
 
 		observer = SessionObserver()
 		CuT.register(observer)
-		CuT.startSession(self.testUser)
-		self.assertEqual(CuT.getCurrentSession().getUser(),self.testUser,"Current session is incorrect.")
-		self.assertEqual(observer.getNotifiedSession().getUser(),self.testUser,"Current session is incorrect.")
+		CuT.startSession(self.testUser1)
+		self.assertEqual(CuT.getCurrentSession().getUser(),self.testUser1,"Current session is incorrect.")
+		self.assertEqual(observer.getNotifiedSession().getUser(),self.testUser1,"Current session is incorrect.")
+		CuT.startSession(self.testUser2)
+		self.assertEqual(CuT.getCurrentSession().getUser(),self.testUser2,"Current session is incorrect.")
+		self.assertEqual(observer.getNotifiedSession().getUser(),self.testUser2,"Current session is incorrect.")
 
 	"""
 	Tests the endSession method.
@@ -68,7 +72,7 @@ class TestSessionManagerClass(unittest.TestCase):
 
 		observer = SessionObserver()
 		CuT.register(observer)
-		CuT.startSession(self.testUser)
+		CuT.startSession(self.testUser1)
 		CuT.endSession()
 		self.assertEqual(CuT.getCurrentSession(),None,"Current session is incorrect.")
 		self.assertEqual(observer.getNotifiedSession(),None,"Current session is incorrect.")
@@ -89,8 +93,9 @@ class TestSessionManagerClass(unittest.TestCase):
 
 		observer = SessionObserver()
 		CuT.register(observer)
-		CuT.startSession(self.testUser)
-		time.sleep(2)
+		CuT.startSession(self.testUser1)
+		CuT.getCurrentSession().sessionStart = 0
+		time.sleep(0.2)
 		self.assertEqual(CuT.getCurrentSession(),None,"Current session is incorrect.")
 		self.assertEqual(observer.getNotifiedSession(),None,"Current session is incorrect.")
 

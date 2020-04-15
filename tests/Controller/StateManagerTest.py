@@ -6,7 +6,7 @@ Unit tests for the StateManager.
 
 import unittest
 import time
-from Controller import StateManager, Observer
+from Controller import MessageManager,StateManager,Observer
 from Model import User
 
 """
@@ -18,6 +18,7 @@ class TestStateManagerClass(unittest.TestCase):
 	"""
 	def setUp(self):
 		self.testUser = User.User("000000000",1)
+		self.testUnauthorizedUser = User.User("000000001",0)
 
 	"""
 	Tests the constructor.
@@ -113,6 +114,17 @@ class TestStateManagerClass(unittest.TestCase):
 		self.assertEqual(CuT.getState().getName(),"Active","State is incorrect.")
 
 	"""
+	Test an unauthorized id being swiped during the Inactive state.
+	"""
+	def test_inactiveUnauthorizedIdSwiped(self):
+		CuT = StateManager.StateManager()
+
+		CuT.setStateByName("Inactive")
+		CuT.idSwiped(self.testUnauthorizedUser)
+		self.assertEqual(MessageManager.getMessage(),MessageManager.UNAUTHORIZED_MESSAGE,"Message is incorrect.")
+		self.assertEqual(CuT.getState().getName(),"Inactive","State is incorrect.")
+
+	"""
 	Test the Emergency Stop Button being pressed during the Active state.
 	"""
 	def test_activeEmergencyButtonPressed(self):
@@ -140,6 +152,17 @@ class TestStateManagerClass(unittest.TestCase):
 
 		CuT.setStateByName("Active")
 		CuT.idSwiped(self.testUser)
+		self.assertEqual(CuT.getState().getName(),"Active","State is incorrect.")
+
+	"""
+	Test an unauthorized id being swiped during the Active state.
+	"""
+	def test_activeUnauthorizedIdSwiped(self):
+		CuT = StateManager.StateManager()
+
+		CuT.setStateByName("Active")
+		CuT.idSwiped(self.testUnauthorizedUser)
+		self.assertEqual(MessageManager.getMessage(),MessageManager.UNAUTHORIZED_MESSAGE,"Message is incorrect.")
 		self.assertEqual(CuT.getState().getName(),"Active","State is incorrect.")
 
 	"""
