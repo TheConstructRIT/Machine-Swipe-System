@@ -19,9 +19,7 @@ FILES_TO_COPY = [
 
 # Configurable values in configuration.json.
 CONFIGURABLE_ITEMS = [
-    ["InternalName","The name used for requests.",str],
     ["DisplayName","The name displayed ot a user.",str],
-    ["ServerEndpoint","The endpoint to send HTTP requests to.",str],
     ["DefaultSessionTime","The default session time in seconds.",int],
     ["AlarmActivationTime","The time to run an alarm for a session close to running out.",int],
 ]
@@ -32,6 +30,7 @@ import json
 import os
 import shutil
 import win32api
+from Controller import DatabaseManager
 
 
 
@@ -178,3 +177,28 @@ if __name__ == '__main__':
         if changesMade:
             with open(configurationLocation,"w",newline="\n") as file:
                 file.write(json.dumps(existingConfiguration,indent=4))
+
+    # Prompt to set up the admin ids.
+    database = DatabaseManager.DatabaseManager(os.path.join(raspbianDrive,"home","pi","MachineSwipeSystem","database.sqlite"))
+    changeAdminIds = True
+    if len(database.database.execute("SELECT * FROM Users WHERE AccessType = \"ADMIN\";").fetchall()) > 0:
+        changeAdminIdsResult = input("Update the admin ids?\n").lower().strip()
+        changeAdminIds = (changeAdminIdsResult == "y" or changeAdminIdsResult == "yes" or changeAdminIdsResult == "t" or changeAdminIdsResult == "true")
+
+    # Change the admin ids.
+    if changeAdminIds:
+        # Change the existing ids.
+        for user in database.database.execute("SELECT Id FROM Users WHERE AccessType = \"ADMIN\";").fetchall():
+            changeAccess = input("Set admin id " + user[0] + " to authorized from admin?\n").lower().strip()
+            if changeAccess == "y" or changeAccess == "yes" or changeAccess == "t" or changeAccess == "true":
+                database.setUserAccessType(user[0],"AUTHORIZED")
+            changeAccess = input("Set admin id " + user[0] + " to unauthorized from admin?\n").lower().strip()
+            if changeAccess == "y" or changeAccess == "yes" or changeAccess == "t" or changeAccess == "true":
+                database.setUserAccessType(user[0],"UNAUTHORIZED")
+
+        # Prompt for new ids.
+        newIds = input("Enter the new admin ids separated by commas?\n").lower().strip()
+        for id in newIds.split(","):
+            if id != 0 and len(id) == 9:
+                database.setUserAccessType(id,"ADMIN")
+                print("Set " + id + " as an admin.")
