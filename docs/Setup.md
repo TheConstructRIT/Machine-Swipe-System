@@ -6,8 +6,40 @@
 ## Software
 The software implementation is specific to the to the 
 Raspberry Pi. The system has been validated on the 2B+,
-but should work on any version that has the GPIO pins
-and can have networking.
+but should work on any version that has the GPIO pins.
+
+### Deploy Script
+To speed up deployment, a `Deploy.py` script has been created
+to automate most of the deployment process for Windows. The
+pre-requisites for this include:
+- [Python 3](https://www.python.org/downloads/)
+- An EXT file system driver, like [Ext2Fsd](https://sourceforge.net/projects/ext2fsd/files/) or [extFS by Paragon](https://www.paragon-software.com/business/extfs-for-windows/)
+- [Raspbian Buster Lite](https://www.raspberrypi.org/downloads/raspbian/)
+  - The desktop versions don't work with the deployment script since the
+    process for setting the desktop to CLI wasn't easy to automate.
+
+Start by flashing Raspbian Buster Lite onto the SD card for
+the Raspberry Pi. Check for a guide online on how to do this.
+Before running the deploy script, the pywin32 library is required. It can be 
+installed by running the following in the command line:
+```bash
+pip3 install pywin32
+```
+
+After the SD card is plugged in an recognized, run the Deploy script
+by running it in the command line.
+```bash
+python3 Deploy.py
+```
+
+The deploy script asks for configuration values and the initial
+admin ids as 9-digit university ids. If the system was already
+deployed, the script can update the code, configuration, and admin ids.
+After the script is done, it can be put into the Raspberry Pi. The
+first run can take up over 2 minutes to complete, but should be less
+to start up for future runs. This depends on the speed of the SD card
+and the model of Raspberry Pi.
+
 
 ### Operating System
 The intended operating system for the system is any
@@ -29,16 +61,9 @@ be downloaded is the repository excluding the following:
 To setup the system for a specific machine, `configuraiton.json`
 needs to be modified. The configuration includes the
 following options:
-- InternalName - the name used with HTTP requests.
-- DisplayName - the name displayed to the end user *(currently not used)*
-- DefaultSessionTime - the default session time if the
-server can't be reached. To make the machine not allow
-sessions when the server is unreachable, this should be
-set to 0.
-- ServerEndpoint - the server endpoint used for network requests.
-This must not include a final slash (`/`) or it will cause
-the requests to fail. If the server is local (on the same device)
-either `localhost` or `127.0.0.1` should be used.
+- DisplayName - the name displayed to the end user.
+- DefaultSessionTime - the default session time for an
+authorized user.
 - AlarmActivationTime - the time (in seconds) that the alarm will
 beep for 5 times if the session goes below it. To disable it, this
 number should be set greater than the session time, or set to 0.
@@ -88,4 +113,3 @@ system is treated as an active command. To stop the system, `Ctrl + C` can
 be used to interrupt the command and stop it from executing. This will also
 be need in the desktop environment since `.bashrc` will run the commands
 when opening a terminal window.
-
