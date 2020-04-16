@@ -291,7 +291,7 @@ class HardwareController():
 				self.buzzer.pulseBuzzer(2)
 				self.leds.pulseColor("Red",2)
 			else:
-				if lastSession.getUser().getHashedId() == newSession.getUser().getHashedId():
+				if lastSession.getUser().getId() == newSession.getUser().getId():
 					self.messageChanged("Extended session")
 					self.buzzer.pulseBuzzer(2)
 					self.leds.pulseColor("Yellow",2)
