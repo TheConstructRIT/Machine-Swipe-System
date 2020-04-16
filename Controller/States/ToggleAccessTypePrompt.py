@@ -27,6 +27,7 @@ class ToggleAccessTypePrompt(SystemState.SystemState):
     Invoked when the emergency stop button is released.
     """
     def emergencyStopButtonReleased(self):
+        self.stateManager.states["ToggleAccessType"].currentUser = None
         self.stateManager.setStateByName("ToggleAccessType")
 
     """

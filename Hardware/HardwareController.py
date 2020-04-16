@@ -8,11 +8,11 @@ import threading
 import time
 
 from Controller import ConfigurationManager
+from Controller import DatabaseManager
 from Controller import Observer
 from Controller import MessageManager
 from Controller import SessionManager
 from Controller import StateManager
-from Controller import SwipeManager
 from Model import Time
 
 
@@ -103,6 +103,22 @@ class SessionObserver(Observer.Observer):
 		self.hardwareController.sessionChanged(args[0])
 
 """
+Observer for access type state changes.
+"""
+class AccessTypeStateChanges(Observer.Observer):
+	"""
+	Creates the observer.
+	"""
+	def __init__(self,hardwareController):
+		self.hardwareController = hardwareController
+
+	"""
+	Notifies an observer.
+	"""
+	def notify(self,*args):
+		self.hardwareController.accessTypeStateChanged(args[0],args[1])
+
+"""
 Thread for updating the time.
 """
 class SessionTimer(threading.Thread):
@@ -112,6 +128,7 @@ class SessionTimer(threading.Thread):
 	def __init__(self,hardwareController):
 		super().__init__()
 		self.hardwareController = hardwareController
+		self.daemon = True
 		self.lastTimeLeft = 0
 		self.buzzerStartTime = ConfigurationManager.getWarningAlarmActivationTime()
 
@@ -135,8 +152,6 @@ class SessionTimer(threading.Thread):
 			self.lastTimeLeft = timeLeft
 		else:
 			self.lastTimeLeft = 0
-
-
 
 	"""
 	Loop for the timer.
@@ -191,6 +206,7 @@ class HardwareController():
 		StateManager.register(StateObserver(self))
 		SessionManager.register(SessionObserver(self))
 		MessageManager.register(MessageObserver(self))
+		StateManager.staticStateManager.states["ToggleAccessType"].register(AccessTypeStateChanges(self))
 
 		# Send the initial state for the e-stop.
 		if self.emergencyStopButton.isPressed():
@@ -229,13 +245,25 @@ class HardwareController():
 		stateName = newState.getName().upper()
 
 		# Set the text.
-		self.screen.setLineText(0,stateName)
+		if stateName == "STOPPED" or stateName == "INACTIVE" or stateName == "ACTIVE":
+			self.screen.setLineText(0,stateName)
 		if stateName == "STOPPED":
 			self.screen.setLineText(1,"E-Stop is active")
 			self.screen.setLineText(2,"")
+			self.screen.setLineText(3,"")
 		elif stateName == "INACTIVE":
 			self.screen.setLineText(1,"Ready to swipe")
 			self.screen.setLineText(2,"")
+		elif stateName == "TOGGLEACCESSTYPEPROMPT":
+			self.screen.setLineText(0,"   Release E-Stop   ")
+			self.screen.setLineText(1,"to enter changing")
+			self.screen.setLineText(2,"user authorization")
+			self.screen.setLineText(3,"   Swipe to cancel  ")
+		elif stateName == "TOGGLEACCESSTYPE":
+			self.screen.setLineText(0,"    Swipe the id    ")
+			self.screen.setLineText(1,"to change")
+			self.screen.setLineText(2,"")
+			self.screen.setLineText(3,"Press E-Stop to stop")
 
 		# Set the LED color.
 		if stateName == "STOPPED":
@@ -292,7 +320,7 @@ class HardwareController():
 	Handles an id being swiped.
 	"""
 	def idSwiped(self,id):
-		SwipeManager.idSwiped(id)
+		StateManager.idSwiped(DatabaseManager.getUser(id))
 
 	"""
 	Handles the emergency stop being pressed or released.
@@ -302,3 +330,12 @@ class HardwareController():
 			StateManager.emergencyStopButtonPressed()
 		else:
 			StateManager.emergencyStopButtonReleased()
+
+	"""
+	Handles the access type being changed.
+	"""
+	def accessTypeStateChanged(self,id,accessType):
+		self.screen.setLineText(0, "   User " + id + "   ")
+		self.screen.setLineText(1, "is " + accessType)
+		self.screen.setLineText(2, "Swipe to change")
+		self.screen.setLineText(3, "Press E-Stop to stop")

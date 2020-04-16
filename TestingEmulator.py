@@ -9,6 +9,7 @@ import time
 import threading
 
 from Controller import Observer
+from Controller import DatabaseManager
 from Hardware import HardwareController
 from Model import ScrollingText
 from Model import Time
@@ -18,7 +19,8 @@ from Model import Time
 # The id buttons to create.
 SWIPE_IDS = [
 	"000000001",
-	"565000953",
+	"000000002",
+	"000000003",
 ]
 
 
@@ -363,4 +365,6 @@ class Emulator():
 
 
 if __name__ == '__main__':
+	DatabaseManager.setUserAccessType("000000001","ADMIN")
+	DatabaseManager.setUserAccessType("000000002","AUTHORIZED")
 	Emulator()

@@ -84,9 +84,9 @@ class SessionManager(Observer.Observable):
 		if self.currentSession is not None:
 			DatabaseManager.sessionEnded(self.currentSession)
 
-		# End the session.
-		self.currentSession = None
-		self.notify(None)
+			# End the session.
+			self.currentSession = None
+			self.notify(None)
 
 
 
