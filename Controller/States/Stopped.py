@@ -28,5 +28,8 @@ class Stopped(SystemState.SystemState):
 	"""
 	Invoked when a user swipes their id.
 	"""
-	def idSwiped(self, User):
-		MessageManager.sendMessage(MessageManager.EMERGENCY_STOP_PRESSED_WARNING)
+	def idSwiped(self,user):
+		if user.getAccessType() == "ADMIN":
+			self.stateManager.setStateByName("ToggleAccessTypePrompt")
+		else:
+			MessageManager.sendMessage(MessageManager.EMERGENCY_STOP_PRESSED_WARNING)

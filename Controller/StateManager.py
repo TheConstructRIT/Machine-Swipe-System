@@ -6,6 +6,8 @@ Manages states in the system.
 
 from Controller.States import Active
 from Controller.States import Inactive
+from Controller.States import ToggleAccessType
+from Controller.States import ToggleAccessTypePrompt
 from Controller.States import Stopped
 from Controller import Observer
 
@@ -24,6 +26,8 @@ class StateManager(Observer.Observable):
 			"Active": Active.Active(self),
 			"Inactive": Inactive.Inactive(self),
 			"Stopped": Stopped.Stopped(self),
+			"ToggleAccessType": ToggleAccessType.ToggleAccessType(self),
+			"ToggleAccessTypePrompt": ToggleAccessTypePrompt.ToggleAccessTypePrompt(self),
 		}
 		self.currentState = self.states["Stopped"]
 
