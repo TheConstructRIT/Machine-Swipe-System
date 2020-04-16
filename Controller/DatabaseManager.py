@@ -64,6 +64,23 @@ class DatabaseManager:
 		return "UNAUTHORIZED"
 
 	"""
+	Sets the access type of a user.
+	"""
+	def setUserAccessType(self,id,accessType):
+		# If the access type is unauthorized, remove the user.
+		if accessType == "UNAUTHORIZED":
+			self.database.execute("DELETE FROM Users WHERE Id = ?;",[id])
+			self.database.commit()
+			return
+
+		# Add or update the type if a record exists.
+		if len(self.database.execute("SELECT * FROM Users WHERE Id = ?",[id]).fetchall()) > 0:
+			self.database.execute("UPDATE Users SET AccessType = ? WHERE Id = ?;",[accessType,id])
+		else:
+			self.database.execute("INSERT INTO Users VALUES (?,?);",[id,accessType])
+		self.database.commit()
+
+	"""
 	Logs the session starting.
 	"""
 	def sessionStarted(self,session):
@@ -104,6 +121,12 @@ def getUser(id):
 		return User.User(id,0,accessType)
 	else:
 		return User.User(id,ConfigurationManager.getDefaultSessionTime(),accessType)
+
+"""
+Sets the access type of a user.
+"""
+def setUserAccessType(id,accessType):
+	getDatabase().setUserAccessType(id,accessType)
 
 """
 Registers a session being started.

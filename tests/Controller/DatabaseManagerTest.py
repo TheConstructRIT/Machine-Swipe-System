@@ -93,6 +93,39 @@ class TestDatabaseManagerClass(unittest.TestCase):
         self.assertEqual(CuT.getUserAccessType("000000003"),"UNAUTHORIZED","Type is incorrect.")
 
     """
+    Tests the setUserAccessType method.
+    """
+    def test_setUserAccessType(self):
+        # Initialize and close the initial database.
+        self.initialDatabase.execute("CREATE TABLE Users (Id char(9),AccessType STRING);")
+        self.initialDatabase.execute("CREATE TABLE Sessions (Id char(9),StartTime BIGINT,EndTime BIGINT);")
+        self.initialDatabase.commit()
+        self.initialDatabase.close()
+
+        # Set a new user type and assert the entries are correct.
+        CuT = DatabaseManager.DatabaseManager(self.databaseFile)
+        CuT.setUserAccessType("000000001","AUTHORIZED")
+        users = CuT.database.execute("SELECT * FROM Users;").fetchall()
+        self.assertEqual(users[0],("000000001","AUTHORIZED"),"User is incorrect.")
+
+        # Set a new user type and assert the entries are correct.
+        CuT.setUserAccessType("000000002","ADMIN")
+        users = CuT.database.execute("SELECT * FROM Users;").fetchall()
+        self.assertEqual(users[0],("000000001","AUTHORIZED"),"User is incorrect.")
+        self.assertEqual(users[1],("000000002","ADMIN"),"User is incorrect.")
+
+        # Set a new user type and assert the entries are correct.
+        CuT.setUserAccessType("000000001","ADMIN")
+        users = CuT.database.execute("SELECT * FROM Users;").fetchall()
+        self.assertEqual(users[0],("000000001","ADMIN"),"User is incorrect.")
+        self.assertEqual(users[1],("000000002","ADMIN"),"User is incorrect.")
+
+        # Set a new user type and assert the entries are correct.
+        CuT.setUserAccessType("000000001","UNAUTHORIZED")
+        users = CuT.database.execute("SELECT * FROM Users;").fetchall()
+        self.assertEqual(users[0],("000000002","ADMIN"),"User is incorrect.")
+
+    """
     Tests the sessionStarted method.
     """
     def test_sessionStarted(self):
@@ -185,6 +218,39 @@ class TestStaticMethods(unittest.TestCase):
         self.assertEqual(DatabaseManager.getUser("000000003").getSessionTime(),0,"Session time is non-zero.")
 
     """
+    Tests the setUserAccessType method.
+    """
+    def test_setUserAccessType(self):
+        # Initialize and close the initial database.
+        self.initialDatabase.execute("CREATE TABLE Users (Id char(9),AccessType STRING);")
+        self.initialDatabase.execute("CREATE TABLE Sessions (Id char(9),StartTime BIGINT,EndTime BIGINT);")
+        self.initialDatabase.commit()
+        self.initialDatabase.close()
+
+        # Set a new user type and assert the entries are correct.
+        DatabaseManager.staticDatabaseManager = DatabaseManager.DatabaseManager(self.databaseFile)
+        DatabaseManager.setUserAccessType("000000001", "AUTHORIZED")
+        users = DatabaseManager.staticDatabaseManager.database.execute("SELECT * FROM Users;").fetchall()
+        self.assertEqual(users[0], ("000000001", "AUTHORIZED"), "User is incorrect.")
+
+        # Set a new user type and assert the entries are correct.
+        DatabaseManager.setUserAccessType("000000002", "ADMIN")
+        users = DatabaseManager.staticDatabaseManager.database.execute("SELECT * FROM Users;").fetchall()
+        self.assertEqual(users[0], ("000000001", "AUTHORIZED"), "User is incorrect.")
+        self.assertEqual(users[1], ("000000002", "ADMIN"), "User is incorrect.")
+
+        # Set a new user type and assert the entries are correct.
+        DatabaseManager.setUserAccessType("000000001", "ADMIN")
+        users = DatabaseManager.staticDatabaseManager.database.execute("SELECT * FROM Users;").fetchall()
+        self.assertEqual(users[0], ("000000001", "ADMIN"), "User is incorrect.")
+        self.assertEqual(users[1], ("000000002", "ADMIN"), "User is incorrect.")
+
+        # Set a new user type and assert the entries are correct.
+        DatabaseManager.setUserAccessType("000000001", "UNAUTHORIZED")
+        users = DatabaseManager.staticDatabaseManager.database.execute("SELECT * FROM Users;").fetchall()
+        self.assertEqual(users[0], ("000000002", "ADMIN"), "User is incorrect.")
+
+    """
     Tests the sessionStarted method.
     """
     def test_sessionStarted(self):
@@ -196,9 +262,9 @@ class TestStaticMethods(unittest.TestCase):
 
         # Set the static database, start sessions, and assert the sessions are correct.
         DatabaseManager.staticDatabaseManager = DatabaseManager.DatabaseManager(self.databaseFile)
-        DatabaseManager.staticDatabaseManager.sessionStarted(Session.Session(User.User("000000001",10),5))
-        DatabaseManager.staticDatabaseManager.sessionStarted(Session.Session(User.User("000000002",10),8))
-        DatabaseManager.staticDatabaseManager.sessionStarted(Session.Session(User.User("000000001",10),15))
+        DatabaseManager.sessionStarted(Session.Session(User.User("000000001",10),5))
+        DatabaseManager.sessionStarted(Session.Session(User.User("000000002",10),8))
+        DatabaseManager.sessionStarted(Session.Session(User.User("000000001",10),15))
         sessions = DatabaseManager.staticDatabaseManager.database.execute("SELECT * FROM Sessions;").fetchall()
         self.assertEqual(sessions[0], ("000000001",5,0), "Session is incorrect.")
         self.assertEqual(sessions[1], ("000000002",8,0), "Session is incorrect.")
@@ -225,13 +291,13 @@ class TestStaticMethods(unittest.TestCase):
 
         # Set the static database, start and end sessions, and assert the sessions are correct.
         DatabaseManager.staticDatabaseManager = DatabaseManager.DatabaseManager(self.databaseFile)
-        DatabaseManager.staticDatabaseManager.sessionStarted(Session.Session(User.User("000000001",10),5))
+        DatabaseManager.sessionStarted(Session.Session(User.User("000000001",10),5))
         currentTime = 7
-        DatabaseManager.staticDatabaseManager.sessionEnded(Session.Session(User.User("000000001",10),5))
-        DatabaseManager.staticDatabaseManager.sessionStarted(Session.Session(User.User("000000002",10),8))
+        DatabaseManager.sessionEnded(Session.Session(User.User("000000001",10),5))
+        DatabaseManager.sessionStarted(Session.Session(User.User("000000002",10),8))
         currentTime = 9
-        DatabaseManager.staticDatabaseManager.sessionEnded(Session.Session(User.User("000000002",10),8))
-        DatabaseManager.staticDatabaseManager.sessionStarted(Session.Session(User.User("000000001",10),15))
+        DatabaseManager.sessionEnded(Session.Session(User.User("000000002",10),8))
+        DatabaseManager.sessionStarted(Session.Session(User.User("000000001",10),15))
         sessions = DatabaseManager.staticDatabaseManager.database.execute("SELECT * FROM Sessions;").fetchall()
         self.assertEqual(sessions[0],("000000001",5,7),"Session is incorrect.")
         self.assertEqual(sessions[1],("000000002",8,9),"Session is incorrect.")
